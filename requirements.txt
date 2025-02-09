@@ -122,7 +122,7 @@ matplotlib==3.10.0
 matplotlib-inline==0.1.7
 mdurl==0.1.2
 mistune==3.1.1
-ml-dtypes>=0.2.0,<5.0.0
+ml-dtypes>=0.2.0,~=0.3.1,>=0.4.0,<5.0.0
 mmh3==5.1.0
 model-signing==0.2.0
 monotonic==1.6
