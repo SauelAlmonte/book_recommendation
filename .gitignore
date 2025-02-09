@@ -22,3 +22,5 @@ __pycache__/
 *.log
 *.tmp
 *.csv
+.python-version
+tagged_description.txt
