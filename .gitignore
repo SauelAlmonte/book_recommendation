@@ -21,3 +21,4 @@ __pycache__/
 # Other
 *.log
 *.tmp
+*.csv
