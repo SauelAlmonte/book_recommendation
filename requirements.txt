@@ -64,7 +64,7 @@ gradio_client==1.7.0
 greenlet==3.1.1
 grpcio==1.70.0
 grpclib==0.4.7
-h11==0.14.0
+h11==0.16.0
 h2==4.2.0
 h5py==3.12.1
 hpack==4.1.0
