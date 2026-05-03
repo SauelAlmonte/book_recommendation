@@ -4,12 +4,15 @@ Semantic book recommendations over a curated catalog: natural-language search, o
 
 This project is shared to **demonstrate implementation and stack choices**.
 
+---
+
 ## Live demo
 
-- **Web app (Vercel):** [https://your-project.vercel.app](https://your-project.vercel.app) _(replace with your deployment URL)_
-- **API (Render):** [https://your-service.onrender.com](https://your-service.onrender.com) _(replace with your Render web service URL; use it as the frontend’s API base)_
-- **Frontend source:** _(add your Vercel app’s repository if it is separate from the backend)_
-- OpenAPI **`/docs`** is available when the Render service runs with `ENVIRONMENT=dev`; production typically uses `ENVIRONMENT=prod`, which disables the interactive docs.
+- **App (Vercel):** [Book-Recommendation-System-FrontEnd](https://book-recommendation-system-front-en.vercel.app/)
+- **Backend source (GitHub):** [Book-Recommendation-System-FrontEnd](https://github.com/SauelAlmonte/Book-Recommendation-System-FrontEnd)
+- **API origin:** [Render](https://book-recommendation-api-hfh8.onrender.com/health)
+
+---
 
 ## What I built
 
