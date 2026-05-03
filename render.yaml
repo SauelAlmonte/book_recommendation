@@ -1,0 +1,25 @@
+# Render Blueprint: https://render.com/docs/blueprint-spec
+# After push: Dashboard → New → Blueprint → connect repo, apply, then set secrets in the UI.
+services:
+  - type: web
+    name: book-recommendation-api
+    runtime: python
+    plan: free
+    region: oregon
+    branch: main
+    buildCommand: pip install --upgrade pip setuptools wheel && pip install --no-cache-dir .
+    startCommand: uvicorn book_recommendation.main:create_app --factory --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.8
+      - key: ENVIRONMENT
+        value: prod
+      - key: BOOKS_CSV_PATH
+        value: books_with_emotions.csv
+      - key: TAGGED_DESCRIPTION_PATH
+        value: tagged_description.txt
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: CORS_ORIGINS
+        sync: false

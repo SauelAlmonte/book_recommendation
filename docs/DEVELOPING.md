@@ -142,6 +142,32 @@ pip install -e . --no-deps
 pytest
 ```
 
+## Deploy on Render
+
+The repo includes a [`render.yaml`](../render.yaml) **Blueprint** (production install only—no `[dev]` extras).
+
+**Pre-deploy checks (local, mirrors Render build):**
+
+```bash
+python -m venv .venv-rendercheck
+source .venv-rendercheck/bin/activate   # Windows: .venv-rendercheck\Scripts\activate
+pip install --upgrade pip setuptools wheel
+pip install --no-cache-dir .
+python -c "import book_recommendation; print(book_recommendation.__version__)"
+deactivate
+rm -rf .venv-rendercheck
+```
+
+Run **`pytest`** from your normal dev venv (`pip install -e ".[dev]"`) before shipping; Render does not run tests unless you add a CI step.
+
+**Runtime:** `render.yaml` sets **`PYTHON_VERSION=3.12.8`** (see [Render Python versions](https://render.com/docs/python-version)). **Build** uses `pip install --no-cache-dir .` for a smaller image layer than a cached pip dir.
+
+**Secrets in the Dashboard:** Set **`OPENAI_API_KEY`** and **`CORS_ORIGINS`** (your Vercel origin). Optional: **`TRUSTED_HOSTS`**.
+
+**Catalog files:** The API needs **`books_with_emotions.csv`** and **`tagged_description.txt`** at the paths given by **`BOOKS_CSV_PATH`** / **`TAGGED_DESCRIPTION_PATH`** (defaults match [`.env.example`](../.env.example)). On Render, attach a [**persistent disk**](https://render.com/docs/disks) and upload or sync those files there, or bake them into a custom deploy path and point the env vars at absolute paths under the disk mount.
+
+**Health check:** Render uses **`GET /health`** (`healthCheckPath` in `render.yaml`).
+
 ## Optional: full notebook environment
 
 The [`requirements-notebooks.txt`](../requirements-notebooks.txt) file lists **top-level** notebook dependencies with minimum versions so GitHub Dependabot is not flooded by a flat lockfile. Resolve the latest compatible set with `pip install -r requirements-notebooks.txt`. The API itself is defined in [`pyproject.toml`](../pyproject.toml).
