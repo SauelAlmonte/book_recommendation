@@ -9,7 +9,7 @@ This project is shared to **demonstrate implementation and stack choices**.
 ## Live demo
 
 - **App (Vercel):** [Book-Recommendation-System-FrontEnd](https://book-recommendation-system-front-en.vercel.app/)
-- **Backend source (GitHub):** [Book-Recommendation-System-FrontEnd](https://github.com/SauelAlmonte/Book-Recommendation-System-FrontEnd)
+- **FrontEnd source (GitHub):** [Book-Recommendation-System-FrontEnd](https://github.com/SauelAlmonte/Book-Recommendation-System-FrontEnd)
 - **API origin:** [Render](https://book-recommendation-api-hfh8.onrender.com/health)
 
 ---
