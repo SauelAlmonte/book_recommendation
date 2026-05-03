@@ -29,7 +29,7 @@ flowchart LR
   subgraph edgeLayer [Edge]
     VercelApp[Vercel_frontend]
   end
-  subgraph backendLayer [Backend]
+  subgraph backendLayer [Render]
     FastAPI[FastAPI_service]
     ChromaStore[Chroma_vector_store]
   end
@@ -48,7 +48,7 @@ flowchart LR
 ## Tech stack
 
 | Area | Technologies |
-|------|----------------|
+| ------ | ---------------- |
 | Language | Python 3.10+ |
 | API | [FastAPI](https://fastapi.tiangolo.com/), [Uvicorn](https://www.uvicorn.org/), [Pydantic](https://docs.pydantic.dev/) v2, [pydantic-settings](https://docs.pydantic.dev/latest/concepts/pydantic_settings/) |
 | LLM / RAG | [LangChain](https://python.langchain.com/) (`langchain`, `langchain-community`, `langchain-openai`, `langchain-text-splitters`, `langchain-chroma`), OpenAI embeddings API |
@@ -65,7 +65,7 @@ flowchart LR
 ## API surface (summary)
 
 | Method | Path | Description |
-|--------|------|-------------|
+| -------- | ------ | ------------- |
 | GET | `/health` | Liveness |
 | GET | `/ready` | Readiness when catalog and vector index are loaded |
 | POST | `/v1/recommendations` | Semantic search with optional `category`, `tone`, and `limit` |
