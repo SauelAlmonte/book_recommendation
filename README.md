@@ -8,7 +8,7 @@ This project is shared to **demonstrate implementation and stack choices**.
 
 - **Web app (Vercel):** [https://your-project.vercel.app](https://your-project.vercel.app) _(replace with your deployment URL)_
 - **API (Render):** [https://your-service.onrender.com](https://your-service.onrender.com) _(replace with your Render web service URL; use it as the frontend’s API base)_
-- **Backend source (GitHub):** [github.com/SauelAlmonte/book_recommendation](https://github.com/SauelAlmonte/book_recommendation)
+- **Backend source (GitHub):** [github.com/SauelAlmonte/book-recommendation-system-backend](https://github.com/SauelAlmonte/book-recommendation-system-backend)
 - **Frontend source:** _(add your Vercel app’s repository if it is separate from the backend)_
 - OpenAPI **`/docs`** is available when the Render service runs with `ENVIRONMENT=dev`; production typically uses `ENVIRONMENT=prod`, which disables the interactive docs.
 
