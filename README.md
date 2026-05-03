@@ -1,50 +1,81 @@
-# Book Recommendation System
+# Book Recommendation System - BackEnd
 
-## Overview
-The **Book Recommendation System** is an intelligent system built using Python, OpenAI, LangChain, and Gradio. It provides personalized book recommendations based on semantic content, allowing users to discover books similar to their preferences. The system uses a large language model (LLM) for text classification, sentiment analysis, and semantic search, making the recommendations more meaningful and relevant.
+Semantic book recommendations over a curated catalog: natural-language search, optional **category** and **tone** filters, and **OpenAI embeddings** stored in an in-memory **Chroma** index. This repository is the **FastAPI backend**, intended to run on **[Render](https://render.com/)**; the user-facing app is hosted on **[Vercel](https://vercel.com/)**.
 
-## Purpose of this Project
-The main reason for this project is to illustrate the application of large language models (LLMs) and semantic search techniques in building a personalized book recommendation system. By leveraging OpenAI's models, LangChain, and Gradio, this project demonstrates how to develop an interactive and intelligent recommendation engine, which shows how modern machine learning frameworks and APIs can be used to create practical applications in natural language processing. The system helps users find books based on content similarity, sentiment, and personal preferences.
-## Technologies Used
-- **Python**: The primary programming language used for the system.
-- **OpenAI API**: Utilized for text classification and natural language understanding.
-- **LangChain**: A framework used to manage text splitting and vector databases.
-- **Gradio**: Provides an interactive web interface for users to interact with the system.
-- **GitHub**: For version control and collaboration.
+This project is shared to **demonstrate implementation and stack choices**.
 
-## Dependencies
-- **kagglehub**: For accessing Kaggle datasets.
-- **pandas**: For data manipulation and analysis.
-- **seaborn**: For statistical data visualization (requires `matplotlib` for plotting).
-- **matplotlib**: Visualization library for creating static, animated, and interactive plots.
-- **python-dotenv**: Used for loading environment variables, including the OpenAI API key.
-- **langchain-community**: The main framework for creating LLM-based applications.
-- **langchain-openai**: Specifically works with OpenAI models.
-- **langchain-chroma**: Used for working with a Chroma database.
-- **transformers**: A powerful library from Hugging Face for working with large open-source LLMs.
-- **gradio**: Framework for building interactive dashboards that can interface with the system.
-- **notebook**: Jupyter notebook support for working with notebooks.
-- **ipywidgets**: Interactive HTML widgets for working with notebooks.
-- **torch**: PyTorch library for deep learning.
-- **tensorflow**: TensorFlow library for machine learning and deep learning models.
-- **flax**: A flexible machine learning framework built on top of JAX.
-- **tf-keras**: Keras API, running on top of TensorFlow for deep learning.
+## Live demo
 
+- **Web app (Vercel):** [https://your-project.vercel.app](https://your-project.vercel.app) _(replace with your deployment URL)_
+- **API (Render):** [https://your-service.onrender.com](https://your-service.onrender.com) _(replace with your Render web service URL; use it as the frontend’s API base)_
+- **Backend source (GitHub):** [github.com/SauelAlmonte/book_recommendation](https://github.com/SauelAlmonte/book_recommendation)
+- **Frontend source:** _(add your Vercel app’s repository if it is separate from the backend)_
+- OpenAPI **`/docs`** is available when the Render service runs with `ENVIRONMENT=dev`; production typically uses `ENVIRONMENT=prod`, which disables the interactive docs.
 
-## Features
-- **Book Recommendations**: Based on book descriptions and user preferences.
-- **Semantic Search**: Uses vector search to find similar books based on their content.
-- **Zero-Shot Text Classification**: Classifies book descriptions to enhance recommendation accuracy.
-- **Sentiment Analysis**: Analyzes emotions in book descriptions to improve recommendation relevance.
-- **Interactive UI**: Gradio provides a user-friendly web interface for easy interaction with the system.
+## What I built
 
-## Setup
+- **REST API** with liveness (`/health`), readiness (`/ready`), and a **recommendations** endpoint that validates inputs with **Pydantic**.
+- **Retrieval pipeline:** load catalog metadata from CSV, embed **one line per book** from a tagged text file using **LangChain** loaders and **OpenAI** embeddings, index in **Chroma**, then **rank** and **filter** by category and emotional tone columns.
+- **Operational guardrails:** startup **catalog validation** (paths, headers, first-line ISBN check) so misconfigured data fails fast before expensive embedding work.
+- **Data tooling:** optional [`scripts/build_catalog.py`](scripts/build_catalog.py) and [`notebooks/`](notebooks/) workflows to reproduce the Kaggle-based catalog; **pytest** coverage for validation and routes, with **CI** for offline tests.
 
-### Requirements
-- Python 3.x
-- OpenAI API key (Sign up on OpenAI to get your API key)
-- LangChain library
-- Gradio library
+## Architecture
+
+```mermaid
+flowchart LR
+  subgraph clientLayer [Client]
+    Browser[Browser]
+  end
+  subgraph edgeLayer [Edge]
+    VercelApp[Vercel_frontend]
+  end
+  subgraph backendLayer [Backend]
+    FastAPI[FastAPI_service]
+    ChromaStore[Chroma_vector_store]
+  end
+  subgraph external [External_and_data]
+    OpenAI[OpenAI_embeddings]
+    CatalogFiles[Catalog_CSV_and_tagged_txt]
+  end
+
+  Browser --> VercelApp
+  VercelApp --> FastAPI
+  FastAPI --> OpenAI
+  FastAPI --> ChromaStore
+  FastAPI --> CatalogFiles
+```
+
+## Tech stack
+
+| Area | Technologies |
+|------|----------------|
+| Language | Python 3.10+ |
+| API | [FastAPI](https://fastapi.tiangolo.com/), [Uvicorn](https://www.uvicorn.org/), [Pydantic](https://docs.pydantic.dev/) v2, [pydantic-settings](https://docs.pydantic.dev/latest/concepts/pydantic_settings/) |
+| LLM / RAG | [LangChain](https://python.langchain.com/) (`langchain`, `langchain-community`, `langchain-openai`, `langchain-text-splitters`, `langchain-chroma`), OpenAI embeddings API |
+| Data | [pandas](https://pandas.pydata.org/), NumPy |
+| Config | [python-dotenv](https://github.com/theskumar/python-dotenv) |
+| Tests | [pytest](https://pytest.org/), [HTTPX](https://www.python-httpx.org/) |
+| Optional catalog build | [kagglehub](https://github.com/Kaggle/kagglehub), [transformers](https://huggingface.co/docs/transformers), PyTorch, tqdm _(see [`pyproject.toml`](pyproject.toml) `[catalog-build]` extra)_ |
+
+## Data and resources
+
+- **Source metadata (public):** [7k Books on Kaggle](https://www.kaggle.com/datasets/dylanjcastillo/7k-books-with-metadata) — dataset id `dylanjcastillo/7k-books-with-metadata`.
+- **Embeddings:** OpenAI embedding models via `langchain-openai` (no keys in this repo).
+
+## API surface (summary)
+
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/health` | Liveness |
+| GET | `/ready` | Readiness when catalog and vector index are loaded |
+| POST | `/v1/recommendations` | Semantic search with optional `category`, `tone`, and `limit` |
+
+Full request and response shapes appear in the interactive **OpenAPI** schema when the API runs in development mode.
+
+## Developer documentation
+
+Detailed setup (environment, catalog files, running the API locally, tests, and deployment notes) lives in **[docs/DEVELOPING.md](docs/DEVELOPING.md)**.
 
 ## License
-- This project is licensed under the MIT License - see the LICENSE file for details.
+
+MIT — see [LICENSE](LICENSE).

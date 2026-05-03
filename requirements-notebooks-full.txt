@@ -59,8 +59,6 @@ google-auth==2.38.0
 google-auth-oauthlib==1.0.0
 google-pasta==0.2.0
 googleapis-common-protos==1.66.0
-gradio==5.15.0
-gradio_client==1.7.0
 greenlet==3.1.1
 grpcio==1.70.0
 grpclib==0.4.7

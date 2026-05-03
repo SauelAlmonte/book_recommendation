@@ -1,0 +1,4 @@
+isbn13,thumbnail,simple_categories,authors,description,title,joy,surprise,anger,fear,sadness
+9781111111111,http://example.com/a.jpg,Fiction,Writer A;Writer B,A detective investigates mysteries in a rainy city.,The Rain Mystery,0.3,0.2,0.0,0.4,0.1
+9782222222222,http://example.com/b.jpg,Fiction,Solo Author,A cookbook about desserts and baking science.,Sweet Science,0.8,0.1,0.0,0.0,0.1
+9783333333333,http://example.com/c.jpg,Nonfiction,Editor C,A history of early aviation pioneers.,Wings of Dawn,0.2,0.3,0.1,0.2,0.2

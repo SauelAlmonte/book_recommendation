@@ -1,6 +1,12 @@
 # Virtual environment
 .venv/
 
+# Packaging / tooling artifacts
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+
 # Python bytecode
 *.pyc
 *.pyo
@@ -16,13 +22,15 @@ __pycache__/
 # IDEs
 .idea/
 .vscode/
+.cursor/
+.claude/
 *.iml
 
 # Other
 *.log
 *.tmp
 *.csv
-.python-version
+!tests/fixtures/**/*.csv
 tagged_description.txt
-.gradio
-
+!tests/fixtures/live_minimal/tagged_description.txt
+.python-version
