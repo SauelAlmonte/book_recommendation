@@ -5,13 +5,13 @@ Local setup, data, testing, and deployment notes for the **book-recommendation**
 ## Project layout
 
 | Path | Purpose |
-|------|---------|
+| ------ | --------- |
 | [`src/book_recommendation/`](../src/book_recommendation/) | FastAPI app and recommendation logic |
 | [`tests/`](../tests/) | Pytest suite |
 | [`notebooks/`](../notebooks/) | Jupyter workflows (paths assume repo root for CSV outputs) |
 | [`static/cover-not-found.jpg`](../static/cover-not-found.jpg) | Fallback cover when a thumbnail is missing |
 | [`pyproject.toml`](../pyproject.toml) | API dependencies and packaging |
-| [`requirements-notebooks-full.txt`](../requirements-notebooks-full.txt) | Optional large dependency set for notebooks |
+| [`requirements-notebooks.txt`](../requirements-notebooks.txt) | Optional notebook stack (loose pins; not a full lockfile) |
 | [`tests/fixtures/live_minimal/`](../tests/fixtures/live_minimal/) | Tiny catalog for optional live OpenAI + Chroma tests |
 
 ## Catalog file contract
@@ -61,7 +61,7 @@ Use `python scripts/build_catalog.py --max-books 50` for a quick sanity check. `
 
 **Notebook path** (outputs go to the **repository root**, next to `pyproject.toml`):
 
-1. Install notebook tooling if needed, e.g. from [`requirements-notebooks-full.txt`](../requirements-notebooks-full.txt), and `pip install kagglehub` (or use the Kaggle UI) to access the source dataset in [`notebooks/data-exploration.ipynb`](../notebooks/data-exploration.ipynb) (`dylanjcastillo/7k-books-with-metadata`).
+1. Install notebook tooling if needed: `pip install -r requirements-notebooks.txt` (after `pip install -e ".[dev]"`). See [`requirements-notebooks.txt`](../requirements-notebooks.txt). Use the Kaggle UI or `kagglehub` in-notebook to access the source dataset in [`notebooks/data-exploration.ipynb`](../notebooks/data-exploration.ipynb) (`dylanjcastillo/7k-books-with-metadata`).
 2. Run [`notebooks/data-exploration.ipynb`](../notebooks/data-exploration.ipynb), then [`notebooks/sentiment-analysis.ipynb`](../notebooks/sentiment-analysis.ipynb) — writes **`books_with_emotions.csv`** to the parent directory (repo root).
 3. Run [`notebooks/vector-search.ipynb`](../notebooks/vector-search.ipynb) — writes **`tagged_description.txt`** to the repo root (paths like `../tagged_description.txt` assume the notebook cwd is `notebooks/`).
 4. Confirm:
@@ -95,7 +95,7 @@ Relative paths in `.env` are resolved from the **repository root** (the folder c
 ## HTTP surface
 
 | Method | Path | Description |
-|--------|------|-------------|
+| -------- | ------ | ------------- |
 | GET | `/health` | Liveness (process is up) |
 | GET | `/ready` | Readiness: **200** with `{"status":"ready"}` when the recommendation service and catalog are loaded; **503** otherwise |
 | POST | `/v1/recommendations` | Body: `query` (required), `category` (default `All`), `tone` (enum, default `All`), `limit` (1–50, default 16) |
@@ -144,4 +144,4 @@ pytest
 
 ## Optional: full notebook environment
 
-Install everything from [`requirements-notebooks-full.txt`](../requirements-notebooks-full.txt) if you need the historical flat pin set for notebooks or older tooling. The API itself is defined in [`pyproject.toml`](../pyproject.toml).
+The [`requirements-notebooks.txt`](../requirements-notebooks.txt) file lists **top-level** notebook dependencies with minimum versions so GitHub Dependabot is not flooded by a flat lockfile. Resolve the latest compatible set with `pip install -r requirements-notebooks.txt`. The API itself is defined in [`pyproject.toml`](../pyproject.toml).
