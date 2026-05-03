@@ -32,6 +32,8 @@ __pycache__/
 *.tmp
 *.csv
 !tests/fixtures/**/*.csv
+!/books_with_emotions.csv
 tagged_description.txt
 !tests/fixtures/live_minimal/tagged_description.txt
+!/tagged_description.txt
 .python-version
